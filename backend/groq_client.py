@@ -43,7 +43,7 @@ Format the answer with these sections:
 def explain_repository(
     context: str,
     api_key: str | None,
-    model: str = "llama-3.3-70b-versatile",
+    model: str = "openai/gpt-oss-20b",
     timeout_seconds: float = 120.0,
 ) -> str:
     """Generate an explanation with Groq without logging or returning the API key."""
