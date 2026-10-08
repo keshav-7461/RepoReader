@@ -27,7 +27,7 @@ load_dotenv()
 OLLAMA_URL = os.getenv("OLLAMA_URL", "http://localhost:11434")
 OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "rafw007/qwen35-codex-coder:9b")
 MAX_CONTEXT_CHARS = min(60_000, max(1_000, int(os.getenv("MAX_CONTEXT_CHARS", "60000"))))
-GROQ_MODEL = os.getenv("GROQ_MODEL", "openai/gpt-oss-20b")
+GROQ_MODEL = os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile")
 # Render is the online deployment target and must always use Groq. Locally,
 # LLM_PROVIDER can select Ollama (the local default) or Groq for development.
 IS_RENDER = os.getenv("RENDER", "").strip().lower() == "true"
@@ -59,8 +59,12 @@ def root() -> dict[str, str]:
 
 @app.get("/health")
 def health() -> dict[str, str]:
-    """Return a simple API health status."""
-    return {"status": "ok", "provider": active_provider()}
+    """Return API and provider configuration status without exposing secrets."""
+    return {
+        "status": "ok",
+        "provider": active_provider(),
+        "groq_api_key_configured": str(bool(os.getenv("GROQ_API_KEY", "").strip())).lower(),
+    }
 
 
 def active_provider() -> str:
