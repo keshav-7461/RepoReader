@@ -45,11 +45,17 @@ st.markdown(
     .feature-row { display: flex; gap: 12px; margin: 1rem 0 1.6rem; flex-wrap: wrap; }
     .feature { border: 1px solid #303642; background: #171b23; color: #cbd2de; padding: 9px 13px; border-radius: 9px; font-size: .88rem; }
     [data-testid="stAlert"] { border-radius: 10px; }
-    </style>
-    <div class="hero-copy">Analyze a public GitHub repository and get a clear, beginner-friendly explanation of its structure and code.</div>
-    <div class="safe-note">Repository files are read as text and never executed.</div>
-    <div class="feature-row"><div class="feature">🔎 Relevant files only</div><div class="feature">🧠 AI powered analysis</div><div class="feature">🔒 Repository code is never run</div></div>""",
+    </style>""",
     unsafe_allow_html=True,
+)
+st.html(
+    '<div class="hero-copy">Analyze a public GitHub repository with a clear, beginner-friendly explanation of its structure and code.</div>'
+    '<div class="safe-note">Repository files are read as text and never executed.</div>'
+    '<div class="feature-row">'
+    '<div class="feature">🔎 Relevant files only</div>'
+    '<div class="feature">🧠 AI powered analysis</div>'
+    '<div class="feature">🔒 Repository code is never run</div>'
+    '</div>'
 )
 
 if "explain_result" not in st.session_state:
