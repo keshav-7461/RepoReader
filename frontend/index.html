@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Understand any public GitHub repository with a clear, AI-generated code explanation." />
+    <title>GitHub Repository Code Explainer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" />
+    <script src="config.js"></script>
+    <script defer src="app.js"></script>
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="#top" aria-label="GitHub Repository Code Explainer home">
+        <span class="brand-mark" aria-hidden="true">&lt;/&gt;</span>
+        <span>Repo<span class="brand-light">Explainer</span></span>
+      </a>
+      <a class="top-link" href="#how-it-works">How it works <span aria-hidden="true">↗</span></a>
+    </header>
+
+    <main id="top">
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-copy">
+          <div class="eyebrow"><span class="status-dot"></span> CODE, MADE CLEAR</div>
+          <h1 id="hero-title">Understand any<br /><span>GitHub repository.</span></h1>
+          <p class="hero-description">Paste a public GitHub repository and get a simple, AI-generated explanation of its structure, technologies, and how it works.</p>
+          <form id="repo-form" class="analyze-form" novalidate>
+            <label for="repo-url">GitHub Repository URL</label>
+            <div class="input-row">
+              <span class="input-icon" aria-hidden="true">↗</span>
+              <input id="repo-url" name="repo_url" type="url" autocomplete="url" placeholder="https://github.com/username/repository" maxlength="512" required />
+              <button id="submit-button" type="submit"><span>Explain Repository</span><span aria-hidden="true">→</span></button>
+            </div>
+            <p class="privacy-note"><span aria-hidden="true">●</span> Public repositories only · Code is read, never run</p>
+          </form>
+          <div id="error-message" class="error-message" role="alert" hidden></div>
+          <div id="loading-state" class="loading-state" role="status" aria-live="polite" hidden>
+            <span class="spinner" aria-hidden="true"></span>
+            <div><strong>Analyzing repository</strong><span id="loading-message">Cloning and selecting relevant files…</span></div>
+          </div>
+        </div>
+        <aside class="hero-card" aria-label="Analysis preview">
+          <div class="card-topline"><span class="window-dots"><i></i><i></i><i></i></span><span>REPOSITORY INSIGHT</span><span class="card-menu">···</span></div>
+          <div class="repo-preview">
+            <div class="repo-icon">⌘</div>
+            <div><strong>your-project</strong><span>Repository analysis</span></div>
+            <span class="private-pill">PUBLIC</span>
+          </div>
+          <div class="preview-divider"></div>
+          <div class="preview-label">WHAT YOU’LL GET</div>
+          <div class="preview-item"><span class="preview-symbol purple">✳</span><div><strong>Clear overview</strong><small>What the project does</small></div><span class="check">✓</span></div>
+          <div class="preview-item"><span class="preview-symbol blue">⌘</span><div><strong>Project structure</strong><small>Folders and key files</small></div><span class="check">✓</span></div>
+          <div class="preview-item"><span class="preview-symbol green">↗</span><div><strong>How it works</strong><small>Components and flow</small></div><span class="check">✓</span></div>
+          <div class="preview-code"><span>AI SUMMARY</span><p>From codebase to clarity<span class="cursor">_</span></p></div>
+        </aside>
+      </section>
+
+      <section id="how-it-works" class="workflow-section">
+        <div class="section-heading"><div><div class="eyebrow">A SIMPLE WORKFLOW</div><h2>From repository to understanding.</h2></div><p>No setup in the repository.<br />No code execution. Just insight.</p></div>
+        <div class="workflow-grid">
+          <article class="workflow-card"><span class="step-number">01</span><span class="step-icon violet">↗</span><h3>Paste repository</h3><p>Share the URL of any public GitHub repository.</p></article>
+          <article class="workflow-card"><span class="step-number">02</span><span class="step-icon blue">⌕</span><h3>Analyze code</h3><p>Relevant files are selected and read securely.</p></article>
+          <article class="workflow-card"><span class="step-number">03</span><span class="step-icon teal">✳</span><h3>AI understands it</h3><p>The code context is turned into a grounded explanation.</p></article>
+          <article class="workflow-card"><span class="step-number">04</span><span class="step-icon amber">▤</span><h3>Get the explanation</h3><p>Explore key files, architecture, and viva questions.</p></article>
+        </div>
+      </section>
+
+      <section id="results" class="results-section" aria-live="polite" hidden>
+        <div class="results-heading"><div><div class="eyebrow">YOUR REPOSITORY REPORT</div><h2 id="result-repository">Repository explanation</h2></div><span id="result-count" class="file-count"></span></div>
+        <div class="results-grid">
+          <aside class="files-card"><div class="files-heading"><span>FILES ANALYZED</span><span id="files-total" class="files-total">0</span></div><ul id="files-list"></ul></aside>
+          <article class="explanation-card"><div class="explanation-heading"><span class="sparkle">✳</span><span>AI-GENERATED EXPLANATION</span></div><div id="explanation-content" class="markdown-content"></div></article>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer"><a class="brand footer-brand" href="#top"><span class="brand-mark" aria-hidden="true">&lt;/&gt;</span><span>Repo<span class="brand-light">Explainer</span></span></a><p>Built with FastAPI, GitPython and Groq.</p><span class="footer-note">Open source learning tool</span></footer>
+  </body>
+</html>

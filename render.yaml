@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: github-code-explainer-api
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn backend.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: LLM_PROVIDER
+        value: groq
+      - key: GROQ_API_KEY
+        sync: false
+      - key: GROQ_MODEL
+        value: llama-3.3-70b-versatile
+      - key: MAX_CONTEXT_CHARS
+        value: "60000"
+      - key: ALLOWED_ORIGINS
+        value: https://github-code-explainer-web.onrender.com
+
+  - type: static
+    name: github-code-explainer-web
+    buildCommand: ""
+    staticPublishPath: ./frontend

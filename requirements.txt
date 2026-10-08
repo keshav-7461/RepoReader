@@ -1,0 +1,8 @@
+fastapi
+uvicorn
+pydantic
+gitpython
+streamlit
+python-dotenv
+requests
+groq
