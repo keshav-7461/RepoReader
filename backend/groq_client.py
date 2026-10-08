@@ -52,19 +52,31 @@ def explain_repository(
             "Groq mode is selected, but GROQ_API_KEY is not configured on the backend."
         )
 
+    user_content = "Explain this repository using only the supplied context.\n\n"
+    if model.startswith("openai/gpt-oss-"):
+        # Groq's GPT-OSS guidance recommends putting all instructions in the
+        # user message. Keep the repository explicitly marked as untrusted.
+        messages = [
+            {
+                "role": "user",
+                "content": f"{SYSTEM_PROMPT}\n\n{user_content}Repository context:\n{context}",
+            }
+        ]
+        model_options = {"include_reasoning": False, "reasoning_effort": "low"}
+    else:
+        messages = [
+            {"role": "system", "content": SYSTEM_PROMPT},
+            {"role": "user", "content": f"{user_content}Repository context:\n{context}"},
+        ]
+        model_options = {}
+
     try:
         client = Groq(api_key=api_key, timeout=timeout_seconds, max_retries=0)
         completion = client.chat.completions.create(
             model=model,
             temperature=0.2,
-            messages=[
-                {"role": "system", "content": SYSTEM_PROMPT},
-                {
-                    "role": "user",
-                    "content": "Explain this repository using only the supplied context.\n\n"
-                    f"Repository context:\n{context}",
-                },
-            ],
+            messages=messages,
+            **model_options,
         )
     except APITimeoutError:
         raise GroqTimeoutError("Groq did not respond before the request timed out.") from None
@@ -72,7 +84,19 @@ def explain_repository(
         raise GroqRateLimitError("Groq rate limit or quota reached. Try again later.") from None
     except AuthenticationError:
         raise GroqConfigurationError("Groq rejected the configured API key.") from None
-    except (APIConnectionError, APIStatusError):
+    except APIStatusError as exc:
+        if exc.status_code in {400, 404}:
+            raise GroqUnavailableError(
+                f"Groq rejected the request (HTTP {exc.status_code}). Check GROQ_MODEL and the request options."
+            ) from None
+        if exc.status_code == 403:
+            raise GroqUnavailableError(
+                "Groq denied this request. Check that the configured model is enabled for this API key."
+            ) from None
+        raise GroqUnavailableError(
+            f"Groq returned HTTP {exc.status_code} while generating the explanation."
+        ) from None
+    except APIConnectionError:
         raise GroqUnavailableError("Groq could not generate an explanation. Try again later.") from None
     except Exception:
         # Keep SDK diagnostics and request headers out of API responses and logs.
