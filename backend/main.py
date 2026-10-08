@@ -28,7 +28,10 @@ OLLAMA_URL = os.getenv("OLLAMA_URL", "http://localhost:11434")
 OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "rafw007/qwen35-codex-coder:9b")
 MAX_CONTEXT_CHARS = min(60_000, max(1_000, int(os.getenv("MAX_CONTEXT_CHARS", "60000"))))
 GROQ_MODEL = os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile")
-LLM_PROVIDER = os.getenv("LLM_PROVIDER", "ollama").strip().lower()
+# Render is the online deployment target and must always use Groq. Locally,
+# LLM_PROVIDER can select Ollama (the local default) or Groq for development.
+IS_RENDER = os.getenv("RENDER", "").strip().lower() == "true"
+LLM_PROVIDER = os.getenv("LLM_PROVIDER", "groq" if IS_RENDER else "ollama").strip().lower()
 ALLOWED_ORIGINS = [
     origin.strip()
     for origin in os.getenv(
@@ -57,7 +60,14 @@ def root() -> dict[str, str]:
 @app.get("/health")
 def health() -> dict[str, str]:
     """Return a simple API health status."""
-    return {"status": "ok"}
+    return {"status": "ok", "provider": active_provider()}
+
+
+def active_provider() -> str:
+    """Select Groq for all Render requests and configured provider locally."""
+    if os.getenv("RENDER", "").strip().lower() == "true":
+        return "groq"
+    return os.getenv("LLM_PROVIDER", LLM_PROVIDER).strip().lower()
 
 
 @app.post("/explain", response_model=ExplainResponse)
@@ -68,7 +78,7 @@ def explain(request: ExplainRequest) -> ExplainResponse:
             status_code=400,
             detail="Please provide a valid public GitHub repository URL.",
         )
-    provider = os.getenv("LLM_PROVIDER", LLM_PROVIDER).strip().lower()
+    provider = active_provider()
     if provider not in {"ollama", "groq"}:
         raise HTTPException(
             status_code=500,
