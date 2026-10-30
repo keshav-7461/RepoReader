@@ -44,7 +44,7 @@ The local web frontend is also available using a static server: run `python -m h
 
 The online setup uses the static HTML/CSS/JavaScript frontend, FastAPI on Render, GitPython, and Groq API. The browser communicates only with FastAPI. The Groq key is read by the backend from `GROQ_API_KEY`; it must be configured as a private Render environment variable. Ollama is not contacted when `LLM_PROVIDER=groq`.
 
-The Groq model defaults to `openai/gpt-oss-20b` and can be changed with `GROQ_MODEL`. Groq's current [model deprecation notice](https://console.groq.com/docs/deprecations) lists this model as shut down for standard free and developer accounts from August 16, 2026; check availability for your account and set `GROQ_MODEL` to an available replacement if needed. Local development settings are loaded from `.env`. The checked-in `.env.example` intentionally contains only an empty `GROQ_API_KEY=` line; keep all actual keys in `.env`, which is ignored by Git.
+The Groq model defaults to `openai/gpt-oss-20b` and can be changed using `GROQ_MODEL`. Check Groq's [supported models](https://console.groq.com/docs/models) and [model deprecation notices](https://console.groq.com/docs/deprecations) for the latest availability and migration information.
 
 ### Run the online backend locally
 
