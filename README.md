@@ -18,12 +18,10 @@ The academic/demo setup uses Streamlit, FastAPI, GitPython, and Ollama with `raf
 1. Install Python, Git, and Ollama.
 2. Create a virtual environment and install dependencies:
 
-   ```powershell
    python -m venv .venv
    .\.venv\Scripts\Activate.ps1
    pip install -r requirements.txt
    Copy-Item .env.example .env
-   ```
 
 3. Set `LLM_PROVIDER=ollama`, `OLLAMA_URL=http://localhost:11434`, and `OLLAMA_MODEL=rafw007/qwen35-codex-coder:9b` in the ignored local `.env`. Make sure the model is installed in Ollama.
 4. In one terminal, run the API:
@@ -102,8 +100,9 @@ The production frontend is plain HTML, CSS, and JavaScript in `frontend/index.ht
 - `GET /health` — process health check
 - `POST /explain` — analyze and explain a public GitHub repository
 
-Example request body: `{"repo_url":"https://github.com/owner/repository"}`.
-
+{
+  "repo_url": "https://github.com/owner/repository"
+}
 ## Technologies
 
 Python, FastAPI, Pydantic, Uvicorn, GitPython, Streamlit, Ollama, Groq Python SDK, python-dotenv, and plain HTML/CSS/JavaScript.
